@@ -122,7 +122,7 @@ app.use("/api", apiRouter);
 
 const publicFolderPath = path.join(__dirname, "/../public");
 
-app.get("*.*", express.static(publicFolderPath, { maxAge: "1y" }));
+app.get("*.*", express.static(publicFolderPath));
 /*
 
 const reactBuildPath = path.join(__dirname, "/../../client/dist");

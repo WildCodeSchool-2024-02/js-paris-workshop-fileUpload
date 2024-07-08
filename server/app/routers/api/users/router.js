@@ -7,9 +7,12 @@ const router = express.Router();
 /* ************************************************************************* */
 
 // Import item-related actions
-const {addSkill} = require("../../../controllers/userActions");
+const {addSkill, edit} = require("../../../controllers/userActions");
+const { isAuth } = require("../../../services/auth");
+const fileUpload = require("../../../services/fileUpload");
 
-router.post("/skills", addSkill);
+router.post("/skills", isAuth, addSkill);
+router.put("/", isAuth, fileUpload.single("avatar"), edit);
 
 /* ************************************************************************* */
 

@@ -14,8 +14,7 @@ export default function Home() {
           {
             headers: {
               Authorization: `Bearer ${auth.token}`,
-            },
-            credentials: "include"
+            }
           }
         );
         if (response.ok) {

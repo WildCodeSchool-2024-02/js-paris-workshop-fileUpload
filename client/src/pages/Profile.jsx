@@ -1,7 +1,8 @@
 import { useOutletContext } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Avatar } from "@mui/material";
+import { toast } from "react-toastify";
 import Button from "@mui/material/Button";
 
 const theme = createTheme({
@@ -15,15 +16,43 @@ const theme = createTheme({
   },
 });
 
-
 function Profile() {
   const avatar = useRef();
   const [edit, setEdit] = useState(false);
-  const {auth} = useOutletContext();
+  const { auth, setAuth } = useOutletContext();
 
   const handleSubmit = async () => {
     console.info(avatar.current.files[0]);
-  }
+
+    const form = new FormData();
+    form.append("avatar", avatar.current.files[0]);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+        method: "PUT",
+        body: form,
+        headers: { Authorization: `Bearer ${auth.token}` },
+      });
+      if (response.ok) {
+        const user = await response.json();
+        setAuth((prevState) => ({ ...prevState, user }));
+        toast.success("Vos modifications ont bien été prise en compte.");
+      } else toast.warn("Veuillez verifier le format de votre image.");
+    } catch (error) {
+      toast.error("Une erreur est survenue..");
+    }
+  };
+
+  useEffect(() => {
+    avatar.current?.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      const fileTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
+
+      if (fileTypes.includes(file.type))
+         (document.querySelector(".profile .MuiAvatar-img").src =
+          URL.createObjectURL(file));
+      else toast.warn("Veuillez verifier le format de votre image.");
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,8 +84,9 @@ function Profile() {
             update avatar
           </Button>
         )}
-        <h4 style={{textAlign: "center"}}>
-          {auth?.user?.email} <br/> {auth?.user?.firstname} <br/> {auth?.user?.lastname}
+        <h4 style={{ textAlign: "center" }}>
+          {auth?.user?.email} <br /> {auth?.user?.firstname} <br />{" "}
+          {auth?.user?.lastname}
         </h4>
       </section>
     </ThemeProvider>
