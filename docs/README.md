@@ -64,8 +64,10 @@ const storage = multer.diskStorage({
   filename: "define how the file will be named",
 });
 ```
+
 Here we use the `path.join` method to define the path to the upload folder via the `__dirname` variable to generate a relative path, this allows us to ensure that the path is valid regardless of the operating system
 {:.alert-info}
+
 - Setup filename generation : 
 ```js
 const storage = multer.diskStorage({
@@ -78,8 +80,10 @@ const storage = multer.diskStorage({
   },
 });
 ```
+
 Here we first validate the type of file sent to us to only accept images, then if the file type matches we generate a random file name to avoid duplicates
 {:.alert-info}
+
 - Export multer middleware using the storage defined before : 
 ```js
 module.exports = multer({ storage });
@@ -125,6 +129,7 @@ router.put("/", edit);
 ```js
 router.put("/", isAuth, fileUpload.single("avatar"), edit);
 ```
+
 It is important to call our authentication middleware beforehand because it allows us to identify the user making the request and retrieve their ID via the token to use it in our SQL query
 {:.alert-info}
 
