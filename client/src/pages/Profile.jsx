@@ -32,8 +32,8 @@ function Profile() {
         <figcaption
           role="presentation"
           onClick={() => {
-            setEdit(true);
             avatar.current.click();
+            setEdit(true);
           }}
         >
           <Avatar
